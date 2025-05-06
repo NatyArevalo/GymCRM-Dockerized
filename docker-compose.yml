@@ -1,25 +1,8 @@
 version: '3.8'
 
 services:
-  gymcrm:
-    build: ./GymCRM
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gymcrm
-    depends_on:
-      - postgres
-      - eureka
-
-  trainerbilling:
-    build: ./TrainerBilling
-    ports:
-      - "8090:8090"
-    depends_on:
-      - eureka
-
   eureka:
-    build: ./EurekaServer
+    build: ./eurekaserver
     ports:
       - "8761:8761"
 
@@ -32,8 +15,33 @@ services:
     ports:
       - "5432:5432"
 
+  gymcrm:
+    build: ./gymcrm
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gymcrm
+      JWT_SECRET: 4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407cABC425ENALDHAN6AN
+      DB_USERNAME: postgres
+      DB_PASSWORD: Abril2023..
+    depends_on:
+      - postgres
+      - eureka
+
   activemq:
     image: rmohr/activemq
     ports:
       - "8161:8161"
       - "61616:61616"
+    environment:
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
+
+  trainerbilling:
+    build: ./trainerbilling
+    ports:
+      - "8090:8090"
+    environment:
+      JWT_SECRET: 4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407cABC425ENALDHAN6AN
+    depends_on:
+      - eureka
