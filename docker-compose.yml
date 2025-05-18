@@ -15,6 +15,14 @@ services:
     ports:
       - "5432:5432"
 
+  mongodb:
+    image: mongo:7.0
+    container_name: trainerbilling-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
   gymcrm:
     build: ./gymcrm
     ports:
@@ -24,6 +32,7 @@ services:
       JWT_SECRET: 4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407cABC425ENALDHAN6AN
       DB_USERNAME: postgres
       DB_PASSWORD: Abril2023..
+      EUREKA_URL: http://eureka:8761/eureka
     depends_on:
       - postgres
       - eureka
@@ -43,5 +52,11 @@ services:
       - "8090:8090"
     environment:
       JWT_SECRET: 4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407cABC425ENALDHAN6AN
+      EUREKA_URL: http://eureka:8761/eureka
+      ACTIVEMQ_BROKER_URL: tcp://activemq:61616
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: trainerbilling_db
     depends_on:
+      - mongodb
       - eureka
